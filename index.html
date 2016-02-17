@@ -789,7 +789,7 @@ function initialize() {
 		coordsActive = !coordsActive;
 		$('#coords').text(event.latLng.toUrlValue());
 	});
-
+    
 	google.maps.event.addListener(map, 'idle', makeHash);
 	google.maps.event.addListener(map, 'maptypeid_changed', makeHash);
 
@@ -881,6 +881,11 @@ function displayPlaces(places,status) {
         position: place.geometry.location
       });
 
+      google.maps.event.addListener(marker, 'rightclick', function(event) {
+		marker.setMap(null);
+	  });
+    
+
       markers.push(marker);
 
       bounds.extend(place.geometry.location);
@@ -910,6 +915,7 @@ function get_directions() {
 }
 
 function computeTotalDistance(result) {
+  console.log(result.geocoded_waypoints);  
   var total = 0;
   var myroute = result.routes[0];
   for (i = 0; i < myroute.legs.length; i++) {
@@ -939,6 +945,10 @@ function runTextSearch(use_places) {
 		    title: mapCenter.toUrlValue(),
 	            position: mapCenter
         	});
+            google.maps.event.addListener(marker, 'rightclick', function(event) {
+		      marker.setMap(null);
+	        });
+    
 	} else if (address.search(/http/) === 0) {
 		addOverlay(address);
 		showSidebar(3);
@@ -962,6 +972,10 @@ function runTextSearch(use_places) {
 	            map: map, 
 	            position: results[0].geometry.location
 	        });
+            google.maps.event.addListener(marker, 'rightclick', function(event) {
+                marker.setMap(null);
+            });
+                
 	      } else {
 	        alert("Geocode was not successful for the following reason: " + status);
 	      }
